@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Input data
+input_data/
