@@ -8,13 +8,13 @@ from blood_pressure_analyzer.data_model import ColumnNames
 
 def draw_blood_pressure_chart(df: pd.DataFrame) -> None:
     st.subheader("Blood Pressure & Pulse")
-    st.markdown("**Hint:** Use the checkboxes below to show standard medical ranges. ")
+    st.markdown("**Hint:** Use the switch below to show standard medical ranges.")
 
-    col1, col2, _ = st.columns([1, 1, 2])
-    with col1:
-        show_systolic = st.checkbox("Show Systolic Ranges", value=True)
-    with col2:
-        show_diastolic = st.checkbox("Show Diastolic Ranges", value=False)
+    range_selection = st.radio(
+        "Show Medical Ranges (AHA Guidelines):",
+        options=["None", ColumnNames.SYSTOLIC, ColumnNames.DIASTOLIC],
+        horizontal=True
+    )
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
@@ -51,7 +51,8 @@ def draw_blood_pressure_chart(df: pd.DataFrame) -> None:
         secondary_y=True,
     )
 
-    if show_systolic:
+    if range_selection == ColumnNames.SYSTOLIC:
+        # TODO refactor this part into reusable components
         # AHA Guidelines for Systolic blood pressure (Annotations on the Left)
         fig.add_hrect(y0=40, y1=120, line_width=0, fillcolor="green", opacity=0.1,
                       annotation_text="Sys Normal (<120)", annotation_position="top left", secondary_y=False)
@@ -68,7 +69,7 @@ def draw_blood_pressure_chart(df: pd.DataFrame) -> None:
         fig.add_hrect(y0=180, y1=220, line_width=0, fillcolor="darkred", opacity=0.3,
                       annotation_text="Sys Severe Hypertension (>180)", annotation_position="top left", secondary_y=False)
 
-    if show_diastolic:
+    if range_selection == ColumnNames.DIASTOLIC:
         # AHA Guidelines for Diastolic blood pressure (Annotations on the Right to avoid overlap)
         # Note: There is no "Elevated" category for Diastolic, it jumps from Normal (<80) to Stage 1 (80-89)
         fig.add_hrect(y0=40, y1=80, line_width=0, fillcolor="green", opacity=0.1,
@@ -101,4 +102,4 @@ def draw_blood_pressure_chart(df: pd.DataFrame) -> None:
     fig.update_yaxes(title_text="Blood Pressure (mmHg)", range=[40, 220], secondary_y=False)
     fig.update_yaxes(title_text="Pulse (bpm)", range=[40, 150], showgrid=False, secondary_y=True)
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
