@@ -20,7 +20,7 @@ def main():
     st.title(_PAGE_TITLE)
     st.set_page_config(page_title=_PAGE_TITLE, page_icon="static/images/droplet_solid.svg", layout="wide")
 
-    blood_pressure_data = st.file_uploader("Choose a CSV file exported from BP Journal", type="csv")
+    blood_pressure_data = st.file_uploader("Choose a CSV file exported from BP Journal:", type="csv")
     if blood_pressure_data is None:
         return
 
