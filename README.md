@@ -2,4 +2,5 @@
 
 ## To run
 
-`uv run streamlit run .\src\blood_pressure_analyzer\__main__.py`
+Windows: `uv run streamlit run .\src\blood_pressure_analyzer\__main__.py`
+Linux: `uv run streamlit run src\blood_pressure_analyzer\__main__.py`

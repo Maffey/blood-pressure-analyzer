@@ -9,5 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
+# PyCharm
+.idea
+
 # Input data
 input_data/
