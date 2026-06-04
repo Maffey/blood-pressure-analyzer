@@ -10,6 +10,10 @@ from blood_pressure_analyzer.csv_parser import parse_blood_pressure_csv, get_tim
 _PAGE_TITLE  = "Blood Pressure Analyzer"
 
 # TODO LIST
+# TODO average line
+# TODO hwo to display multiple record per day?
+# TODO in diagram ,where normal occurrences?
+# TODO pie-chart of what I end up mostly with (what blood pressure stage)
 # TODO other data to be displayed, and other type of charts
 # TODO use pandera, maybe pydantic as well
 # TODO docker?
