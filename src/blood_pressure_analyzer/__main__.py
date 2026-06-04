@@ -9,12 +9,22 @@ from blood_pressure_analyzer.csv_parser import parse_blood_pressure_csv, get_tim
 
 _PAGE_TITLE  = "Blood Pressure Analyzer"
 
+# TODO LIST
+# TODO other data to be displayed, and other type of charts
+# TODO use pandera, maybe pydantic as well
+# TODO docker?
+# TODO hosting?
+
 
 def main():
     st.title(_PAGE_TITLE)
     st.set_page_config(page_title=_PAGE_TITLE, page_icon="static/images/droplet_solid.svg", layout="wide")
-    # TODO file selector
-    bp_df = parse_blood_pressure_csv(Path("input_data/Mateusz_20250212_20260603.csv"))
+
+    blood_pressure_data = st.file_uploader("Choose a CSV file exported from BP Journal", type="csv")
+    if blood_pressure_data is None:
+        return
+
+    bp_df = parse_blood_pressure_csv(blood_pressure_data)
     with st.expander("Table View of Data Source"):
         st.dataframe(bp_df)
     time_range = get_time_range(bp_df)
