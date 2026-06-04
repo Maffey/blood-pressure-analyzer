@@ -37,8 +37,8 @@ def main():
     filtered_bp_df = bp_df[selected_time_range.start:selected_time_range.end]
 
     draw_blood_pressure_chart(filtered_bp_df)
-    draw_weight_chart(filtered_bp_df)
     draw_category_histogram(filtered_bp_df)
+    draw_weight_chart(filtered_bp_df)
 
 
 
