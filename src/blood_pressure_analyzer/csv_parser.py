@@ -1,9 +1,7 @@
 import datetime as dt
-from pathlib import Path
 from typing import NamedTuple
 
 import pandas as pd
-from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 
 class TimeRange(NamedTuple):
