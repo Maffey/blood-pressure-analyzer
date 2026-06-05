@@ -1,9 +1,7 @@
 import datetime as dt
-from pathlib import Path
 from typing import NamedTuple
 
 import pandas as pd
-from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 
 class TimeRange(NamedTuple):
@@ -17,4 +15,6 @@ def parse_blood_pressure_csv(csv_path: object) -> pd.DataFrame:
 
 
 def get_time_range(df: pd.DataFrame) -> TimeRange:
-    return TimeRange(start=df.index.min().to_pydatetime(), end=df.index.max().to_pydatetime())
+    return TimeRange(
+        start=df.index.min().to_pydatetime(), end=df.index.max().to_pydatetime()
+    )
