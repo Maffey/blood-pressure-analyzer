@@ -10,6 +10,7 @@ from blood_pressure_analyzer.csv_parser import parse_blood_pressure_csv, get_tim
 _PAGE_TITLE  = "Blood Pressure Analyzer"
 
 # TODO LIST
+# TODO prek, ruff
 # TODO average line
 # TODO hwo to display multiple record per day?
 # TODO in diagram ,where normal occurrences?
