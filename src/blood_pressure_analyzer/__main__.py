@@ -1,6 +1,8 @@
 import streamlit as st
 
+from blood_pressure_analyzer.charts.alerts import show_irregular_heartbeat_alert
 from blood_pressure_analyzer.charts.blood_pressure import draw_all_blood_pressure_charts
+from blood_pressure_analyzer.charts.metrics import show_metrics
 from blood_pressure_analyzer.charts.other import (
     draw_weight_chart,
     draw_category_histogram,
@@ -43,6 +45,9 @@ def main():
     with st.expander("Table View of Data Source"):
         st.dataframe(bp_df)
     time_range = get_time_range(bp_df)
+
+    show_metrics(bp_df)
+    show_irregular_heartbeat_alert(bp_df)
 
     selected_time_range = TimeRange(
         *st.slider(
