@@ -3,7 +3,8 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from blood_pressure_analyzer.charts.blood_pressure import draw_blood_pressure_chart
+from blood_pressure_analyzer.charts.blood_pressure import draw_blood_pressure_chart_with_recommendations, \
+    draw_all_blood_pressure_charts
 from blood_pressure_analyzer.charts.other import draw_weight_chart, draw_category_histogram
 from blood_pressure_analyzer.csv_parser import parse_blood_pressure_csv, get_time_range, TimeRange
 
@@ -18,6 +19,7 @@ _PAGE_TITLE  = "Blood Pressure Analyzer"
 # TODO use pandera, maybe pydantic as well
 # TODO docker?
 # TODO hosting?
+# TODO ruff
 
 
 def main():
@@ -40,11 +42,9 @@ def main():
 
     filtered_bp_df = bp_df[selected_time_range.start:selected_time_range.end]
 
-    draw_blood_pressure_chart(filtered_bp_df)
+    draw_all_blood_pressure_charts(filtered_bp_df)
     draw_category_histogram(filtered_bp_df)
     draw_weight_chart(filtered_bp_df)
-
-
 
 
 if __name__ == "__main__":

@@ -6,8 +6,8 @@ from plotly.subplots import make_subplots
 from blood_pressure_analyzer.data_model import ColumnNames
 
 
-def draw_blood_pressure_chart(df: pd.DataFrame) -> None:
-    st.subheader("Blood Pressure & Pulse")
+def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
+    st.subheader("Blood Pressure with AHA recommendations")
     st.markdown("**Hint:** Use the switch below to show standard medical ranges.")
 
     range_selection = st.radio(
@@ -103,3 +103,127 @@ def draw_blood_pressure_chart(df: pd.DataFrame) -> None:
     fig.update_yaxes(title_text="Pulse (bpm)", range=[40, 150], showgrid=False, secondary_y=True)
 
     st.plotly_chart(fig, width="stretch")
+
+
+def draw_systolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
+    st.subheader("Systolic Blood Pressure")
+
+    series = df[ColumnNames.SYSTOLIC]
+    rolling_median = series.rolling(window=rolling_median_period, center=True, min_periods=1).median()
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=df.index, y=series,
+        name="Systolic (mmHg)", mode='lines+markers',
+        line=dict(color='firebrick', width=2),
+        marker=dict(size=6)
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=df.index, y=rolling_median,
+        name=f"Rolling Median ({rolling_median_period}d)",
+        mode='lines',
+        line=dict(color='firebrick', width=2, dash='dash'),
+        opacity=0.6
+    ))
+
+    fig.update_layout(
+        title="Systolic Blood Pressure History",
+        hovermode="x unified",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(l=20, r=20, t=60, b=20)
+    )
+    fig.update_yaxes(title_text="Systolic (mmHg)", range=[40, 220])
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def draw_diastolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
+    st.subheader("Diastolic Blood Pressure")
+
+    series = df[ColumnNames.DIASTOLIC]
+    rolling_median = series.rolling(window=rolling_median_period, center=True, min_periods=1).median()
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=df.index, y=series,
+        name="Diastolic (mmHg)", mode='lines+markers',
+        line=dict(color='royalblue', width=2),
+        marker=dict(size=6)
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=df.index, y=rolling_median,
+        name=f"Rolling Median ({rolling_median_period}d)",
+        mode='lines',
+        line=dict(color='royalblue', width=2, dash='dash'),
+        opacity=0.6
+    ))
+
+    fig.update_layout(
+        title="Diastolic Blood Pressure History",
+        hovermode="x unified",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(l=20, r=20, t=60, b=20)
+    )
+    fig.update_yaxes(title_text="Diastolic (mmHg)", range=[40, 160])
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def draw_pulse_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
+    st.subheader("Pulse")
+
+    series = df[ColumnNames.PULSE]
+    rolling_median = series.rolling(window=rolling_median_period, center=True, min_periods=1).median()
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=df.index, y=series,
+        name="Pulse (bpm)", mode='lines+markers',
+        line=dict(color='mediumseagreen', width=2, dash='dot'),
+        marker=dict(size=6)
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=df.index, y=rolling_median,
+        name=f"Rolling Median ({rolling_median_period}d)",
+        mode='lines',
+        line=dict(color='mediumseagreen', width=2, dash='dash'),
+        opacity=0.6
+    ))
+
+    fig.update_layout(
+        title="Pulse History",
+        hovermode="x unified",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(l=20, r=20, t=60, b=20)
+    )
+    fig.update_yaxes(title_text="Pulse (bpm)", range=[40, 150])
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def draw_all_blood_pressure_charts(df: pd.DataFrame) -> None:
+    """Render the rolling-median period selector and all three individual charts."""
+    st.header("Blood Pressure & Pulse")
+
+    draw_blood_pressure_chart_with_recommendations(df)
+
+    st.subheader("Individual Charts")
+    rolling_median_period = st.slider(
+        label="Rolling Median Period (days)",
+        min_value=2,
+        max_value=30,
+        value=7,
+        step=1,
+        help="Number of readings used to compute the rolling median. "
+             "Larger values produce a smoother trend line."
+    )
+
+    draw_systolic_chart(df, rolling_median_period)
+    draw_diastolic_chart(df, rolling_median_period)
+    draw_pulse_chart(df, rolling_median_period)
