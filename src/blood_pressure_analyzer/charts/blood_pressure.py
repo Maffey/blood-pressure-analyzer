@@ -6,7 +6,9 @@ from plotly.subplots import make_subplots
 from blood_pressure_analyzer.data_model import ColumnNames
 
 
-def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
+def draw_blood_pressure_chart_with_recommendations(
+    df: pd.DataFrame, dynamic_y_axis: bool = False
+) -> None:
     st.subheader("Blood Pressure with AHA recommendations")
     st.markdown("**Hint:** Use the switch below to show standard medical ranges.")
 
@@ -70,7 +72,6 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             annotation_position="top left",
             secondary_y=False,
         )
-
         fig.add_hrect(
             y0=120,
             y1=130,
@@ -81,7 +82,6 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             annotation_position="top left",
             secondary_y=False,
         )
-
         fig.add_hrect(
             y0=130,
             y1=140,
@@ -92,7 +92,6 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             annotation_position="top left",
             secondary_y=False,
         )
-
         fig.add_hrect(
             y0=140,
             y1=180,
@@ -103,7 +102,6 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             annotation_position="top left",
             secondary_y=False,
         )
-
         fig.add_hrect(
             y0=180,
             y1=220,
@@ -128,7 +126,6 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             annotation_position="top right",
             secondary_y=False,
         )
-
         fig.add_hrect(
             y0=80,
             y1=90,
@@ -139,7 +136,6 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             annotation_position="top right",
             secondary_y=False,
         )
-
         fig.add_hrect(
             y0=90,
             y1=120,
@@ -150,7 +146,6 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             annotation_position="top right",
             secondary_y=False,
         )
-
         fig.add_hrect(
             y0=120,
             y1=220,
@@ -170,18 +165,21 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
         margin=dict(l=20, r=20, t=60, b=20),
     )
 
-    # Format the Y-Axes
-    fig.update_yaxes(
-        title_text="Blood Pressure (mmHg)", range=[40, 220], secondary_y=False
-    )
-    fig.update_yaxes(
-        title_text="Pulse (bpm)", range=[40, 150], showgrid=False, secondary_y=True
-    )
+    # Format the Y-Axes (Conditionally apply ranges)
+    fig.update_yaxes(title_text="Blood Pressure (mmHg)", secondary_y=False)
+    if not dynamic_y_axis:
+        fig.update_yaxes(range=[40, 220], secondary_y=False)
+
+    fig.update_yaxes(title_text="Pulse (bpm)", showgrid=False, secondary_y=True)
+    if not dynamic_y_axis:
+        fig.update_yaxes(range=[40, 150], secondary_y=True)
 
     st.plotly_chart(fig, width="stretch")
 
 
-def draw_systolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
+def draw_systolic_chart(
+    df: pd.DataFrame, rolling_median_period: int, dynamic_y_axis: bool = False
+) -> None:
     st.subheader("Systolic Blood Pressure")
 
     series = df[ColumnNames.SYSTOLIC]
@@ -219,12 +217,17 @@ def draw_systolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=20, r=20, t=60, b=20),
     )
-    fig.update_yaxes(title_text="Systolic (mmHg)", range=[40, 220])
+
+    fig.update_yaxes(title_text="Systolic (mmHg)")
+    if not dynamic_y_axis:
+        fig.update_yaxes(range=[40, 220])
 
     st.plotly_chart(fig, use_container_width=True)
 
 
-def draw_diastolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
+def draw_diastolic_chart(
+    df: pd.DataFrame, rolling_median_period: int, dynamic_y_axis: bool = False
+) -> None:
     st.subheader("Diastolic Blood Pressure")
 
     series = df[ColumnNames.DIASTOLIC]
@@ -262,12 +265,17 @@ def draw_diastolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=20, r=20, t=60, b=20),
     )
-    fig.update_yaxes(title_text="Diastolic (mmHg)", range=[40, 160])
+
+    fig.update_yaxes(title_text="Diastolic (mmHg)")
+    if not dynamic_y_axis:
+        fig.update_yaxes(range=[40, 160])
 
     st.plotly_chart(fig, use_container_width=True)
 
 
-def draw_pulse_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
+def draw_pulse_chart(
+    df: pd.DataFrame, rolling_median_period: int, dynamic_y_axis: bool = False
+) -> None:
     st.subheader("Pulse")
 
     series = df[ColumnNames.PULSE]
@@ -305,7 +313,10 @@ def draw_pulse_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=20, r=20, t=60, b=20),
     )
-    fig.update_yaxes(title_text="Pulse (bpm)", range=[40, 150])
+
+    fig.update_yaxes(title_text="Pulse (bpm)")
+    if not dynamic_y_axis:
+        fig.update_yaxes(range=[40, 150])
 
     st.plotly_chart(fig, use_container_width=True)
 
@@ -314,7 +325,14 @@ def draw_all_blood_pressure_charts(df: pd.DataFrame) -> None:
     """Render the rolling-median period selector and all three individual charts."""
     st.header("Blood Pressure & Pulse")
 
-    draw_blood_pressure_chart_with_recommendations(df)
+    # Add a toggle so the user can choose dynamic or fixed bounds
+    dynamic_y_axis = st.toggle(
+        "Dynamic Y-Axis Ranges",
+        value=False,
+        help="Turn on to automatically scale diagrams to your data rather than using static medical ranges.",
+    )
+
+    draw_blood_pressure_chart_with_recommendations(df, dynamic_y_axis)
 
     st.subheader("Individual Charts")
     rolling_median_period = st.slider(
@@ -327,6 +345,6 @@ def draw_all_blood_pressure_charts(df: pd.DataFrame) -> None:
         "Larger values produce a smoother trend line.",
     )
 
-    draw_systolic_chart(df, rolling_median_period)
-    draw_diastolic_chart(df, rolling_median_period)
-    draw_pulse_chart(df, rolling_median_period)
+    draw_systolic_chart(df, rolling_median_period, dynamic_y_axis)
+    draw_diastolic_chart(df, rolling_median_period, dynamic_y_axis)
+    draw_pulse_chart(df, rolling_median_period, dynamic_y_axis)

@@ -24,7 +24,6 @@ _PAGE_TITLE = "Blood Pressure Analyzer"
 # TODO use pandera, maybe pydantic as well
 # TODO docker?
 # TODO hosting?
-# TODO ruff
 
 
 def main():
