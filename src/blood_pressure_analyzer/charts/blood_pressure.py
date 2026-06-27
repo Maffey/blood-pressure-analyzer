@@ -51,7 +51,7 @@ def draw_blood_pressure_chart_with_recommendations(df: pd.DataFrame) -> None:
             y=df[ColumnNames.PULSE],
             name="Pulse (bpm)",
             mode="lines+markers",
-            line=dict(color="mediumseagreen", dash="dot", width=2),
+            line=dict(color="mediumseagreen", width=2),
             marker=dict(size=6),
         ),
         secondary_y=True,
@@ -283,7 +283,7 @@ def draw_pulse_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
             y=series,
             name="Pulse (bpm)",
             mode="lines+markers",
-            line=dict(color="mediumseagreen", width=2, dash="dot"),
+            line=dict(color="mediumseagreen", width=2),
             marker=dict(size=6),
         )
     )
