@@ -206,7 +206,7 @@ def draw_systolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
         go.Scatter(
             x=df.index,
             y=rolling_median,
-            name=f"Rolling Median ({rolling_median_period}d)",
+            name=f"Rolling Median ({rolling_median_period} readings)",
             mode="lines",
             line=dict(color="firebrick", width=2, dash="dash"),
             opacity=0.6,
@@ -249,7 +249,7 @@ def draw_diastolic_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
         go.Scatter(
             x=df.index,
             y=rolling_median,
-            name=f"Rolling Median ({rolling_median_period}d)",
+            name=f"Rolling Median ({rolling_median_period} readings)",
             mode="lines",
             line=dict(color="royalblue", width=2, dash="dash"),
             opacity=0.6,
@@ -292,7 +292,7 @@ def draw_pulse_chart(df: pd.DataFrame, rolling_median_period: int) -> None:
         go.Scatter(
             x=df.index,
             y=rolling_median,
-            name=f"Rolling Median ({rolling_median_period}d)",
+            name=f"Rolling Median ({rolling_median_period} readings)",
             mode="lines",
             line=dict(color="mediumseagreen", width=2, dash="dash"),
             opacity=0.6,
@@ -318,12 +318,12 @@ def draw_all_blood_pressure_charts(df: pd.DataFrame) -> None:
 
     st.subheader("Individual Charts")
     rolling_median_period = st.slider(
-        label="Rolling Median Period (days)",
+        label="Rolling Median Period (readings)",
         min_value=2,
         max_value=30,
         value=7,
         step=1,
-        help="Number of readings used to compute the rolling median. "
+        help="Number of consecutive readings used to compute the rolling median. "
         "Larger values produce a smoother trend line.",
     )
 
