@@ -222,7 +222,7 @@ def draw_systolic_chart(
     if not dynamic_y_axis:
         fig.update_yaxes(range=[40, 220])
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 def draw_diastolic_chart(
@@ -270,7 +270,7 @@ def draw_diastolic_chart(
     if not dynamic_y_axis:
         fig.update_yaxes(range=[40, 160])
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 def draw_pulse_chart(
@@ -318,7 +318,7 @@ def draw_pulse_chart(
     if not dynamic_y_axis:
         fig.update_yaxes(range=[40, 150])
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 def draw_all_blood_pressure_charts(df: pd.DataFrame) -> None:

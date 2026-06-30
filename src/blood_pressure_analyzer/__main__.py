@@ -18,7 +18,6 @@ from blood_pressure_analyzer.validation import BloodPressureCsvValidationError
 _PAGE_TITLE = "Blood Pressure Analyzer"
 
 # TODO-LIST
-# TODO docker?
 # TODO hosting?
 
 

@@ -111,7 +111,7 @@ def _draw_stage_pie_chart(
         legend=dict(orientation="v"),
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 def draw_blood_pressure_stage_pies(df: pd.DataFrame) -> None:

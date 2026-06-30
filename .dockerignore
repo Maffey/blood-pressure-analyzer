@@ -14,3 +14,9 @@ dist
 build
 tmp
 .DS_Store
+
+# Local / personal data and tooling not needed in the image
+input_data
+prek.toml
+Dockerfile
+.dockerignore
