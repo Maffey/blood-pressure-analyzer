@@ -36,13 +36,19 @@ COPY --from=builder --chown=app:app /app /app
 # Put the venv on PATH so `streamlit` is resolvable directly.
 ENV PATH="/app/.venv/bin:$PATH"
 
+# Streamlit reads these natively, so the listen port can be overridden by the
+# host (Fly sets none and uses 8501; Railway/Render/Cloud Run inject $PORT and
+# you point STREAMLIT_SERVER_PORT at it) without rebuilding the image.
+ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0 \
+    STREAMLIT_SERVER_PORT=8501 \
+    STREAMLIT_SERVER_HEADLESS=true
+
 USER app
 
 EXPOSE 8501
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8501/_stcore/health').status==200 else 1)"
+    CMD python -c "import os,urllib.request,sys; p=os.environ.get('STREAMLIT_SERVER_PORT','8501'); sys.exit(0 if urllib.request.urlopen(f'http://localhost:{p}/_stcore/health').status==200 else 1)"
 
 # `static/images/droplet_solid.svg` is referenced relatively, so launch from /app.
-ENTRYPOINT ["streamlit", "run", "src/blood_pressure_analyzer/__main__.py", \
-    "--server.address=0.0.0.0", "--server.port=8501", "--server.headless=true"]
+ENTRYPOINT ["streamlit", "run", "src/blood_pressure_analyzer/__main__.py"]

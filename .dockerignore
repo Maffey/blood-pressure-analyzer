@@ -20,3 +20,4 @@ input_data
 prek.toml
 Dockerfile
 .dockerignore
+fly.toml

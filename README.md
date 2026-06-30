@@ -26,3 +26,25 @@ docker run --rm -p 8501:8501 blood-pressure-analyzer
 ```
 
 Then open http://localhost:8501.
+
+The listen port can be overridden without rebuilding via `STREAMLIT_SERVER_PORT`
+(e.g. for hosts that inject a `$PORT`).
+
+## Deploy to Fly.io
+
+The image and [`fly.toml`](./fly.toml) are ready to deploy. With the
+[`fly` CLI](https://fly.io/docs/flyctl/install/) installed and `fly auth login` done:
+
+```bash
+# First time only: claim a unique app name and region (keeps the existing fly.toml).
+fly launch --no-deploy
+
+# Deploy (builds the Dockerfile and ships it).
+fly deploy
+
+# Open the running app.
+fly open
+```
+
+The app scales to zero when idle (`auto_stop_machines`), so it costs nothing
+between visits and cold-starts on the next request.

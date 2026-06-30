@@ -16,9 +16,36 @@ from blood_pressure_analyzer.csv_parser import (
 from blood_pressure_analyzer.validation import BloodPressureCsvValidationError
 
 _PAGE_TITLE = "Blood Pressure Analyzer"
-
-# TODO-LIST
-# TODO hosting?
+# TODO
+# Done. Here's what changed.
+# Dockerfile — config is now env-var driven so any host can override the port without a rebuild:
+# •
+# Added STREAMLIT_SERVER_ADDRESS=0.0.0.0, STREAMLIT_SERVER_PORT=8501, STREAMLIT_SERVER_HEADLESS=true.
+# •
+# Entrypoint slimmed to just streamlit run … (flags moved to env).
+# •
+# HEALTHCHECK now reads STREAMLIT_SERVER_PORT so it stays correct if the port is overridden.
+# fly.toml (new) — ready to deploy:
+# •
+# internal_port = 8501, force_https, builds from the Dockerfile.
+# •
+# Scale-to-zero (auto_stop_machines = "stop", min_machines_running = 0) — free when idle.
+# •
+# Connection-based concurrency so Streamlit's long-lived WebSocket sessions don't get a machine reaped mid-use.
+# •
+# HTTP health check on /_stcore/health.
+# •
+# shared-cpu-1x / 512 MB VM (note in-file: bump to 1 GB if pandas OOMs).
+# •
+# primary_region = "waw" (Warsaw) — change if you're elsewhere.
+# README.md — added a "Deploy to Fly.io" section (fly launch --no-deploy → fly deploy → fly open) and a note about overriding the port.
+# .dockerignore — excluded fly.toml from the image context.
+# __main__.py — removed the now-resolved # TODO hosting? block.
+# To ship it:
+# fly launch --no-deploy   # claim a unique app name/region (keeps this fly.toml)
+# fly deploy
+# fly open
+# One thing to decide before it's public: the app is open to anyone with the URL. Each visitor uploads their own CSV (so no leak of your data, and nothing is persisted server-side), but if you'd rather lock it down, the simplest path on Fly is basic-auth via a tiny proxy or Fly's access controls — say the word and I'll wire it in.
 
 
 def main():
