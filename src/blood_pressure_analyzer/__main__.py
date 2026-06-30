@@ -6,6 +6,7 @@ from blood_pressure_analyzer.charts.metrics import show_metrics
 from blood_pressure_analyzer.charts.other import (
     draw_weight_chart,
     draw_category_histogram,
+    draw_blood_pressure_stage_pies,
 )
 from blood_pressure_analyzer.csv_parser import (
     parse_blood_pressure_csv,
@@ -16,20 +17,18 @@ from blood_pressure_analyzer.csv_parser import (
 _PAGE_TITLE = "Blood Pressure Analyzer"
 
 # TODO-LIST
-# TODO hwo to display multiple record per day?
-# TODO pie-chart of what I end up mostly with (what blood pressure stage)
 # TODO use pandera, maybe pydantic as well
 # TODO docker?
 # TODO hosting?
 
 
 def main():
-    st.title(_PAGE_TITLE)
     st.set_page_config(
         page_title=_PAGE_TITLE,
         page_icon="static/images/droplet_solid.svg",
         layout="wide",
     )
+    st.title(_PAGE_TITLE)
 
     blood_pressure_data = st.file_uploader(
         "Choose a CSV file exported from BP Journal:", type="csv"
@@ -58,6 +57,7 @@ def main():
 
     draw_all_blood_pressure_charts(filtered_bp_df)
     draw_category_histogram(filtered_bp_df)
+    draw_blood_pressure_stage_pies(filtered_bp_df)
     draw_weight_chart(filtered_bp_df)
 
 
