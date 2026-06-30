@@ -9,15 +9,15 @@ from blood_pressure_analyzer.charts.other import (
     draw_blood_pressure_stage_pies,
 )
 from blood_pressure_analyzer.csv_parser import (
+    TimeRange,
     parse_blood_pressure_csv,
     get_time_range,
-    TimeRange,
 )
+from blood_pressure_analyzer.validation import BloodPressureCsvValidationError
 
 _PAGE_TITLE = "Blood Pressure Analyzer"
 
 # TODO-LIST
-# TODO use pandera, maybe pydantic as well
 # TODO docker?
 # TODO hosting?
 
@@ -36,7 +36,12 @@ def main():
     if blood_pressure_data is None:
         return
 
-    bp_df = parse_blood_pressure_csv(blood_pressure_data)
+    try:
+        bp_df = parse_blood_pressure_csv(blood_pressure_data)
+    except BloodPressureCsvValidationError as exc:
+        st.error(str(exc))
+        st.stop()
+
     with st.expander("Table View of Data Source"):
         st.dataframe(bp_df)
     time_range = get_time_range(bp_df)
